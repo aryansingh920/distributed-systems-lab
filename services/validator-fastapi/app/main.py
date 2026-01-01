@@ -3,6 +3,8 @@ from prometheus_client import CONTENT_TYPE_LATEST, generate_latest, REGISTRY
 from prometheus_client import CollectorRegistry
 from prometheus_client import multiprocess  # harmless if unused
 from prometheus_client import start_http_server  # not used
+from app.consumer import run_in_thread
+run_in_thread()
 
 app = FastAPI()
 

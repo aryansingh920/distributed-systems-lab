@@ -1,0 +1,24 @@
+global:
+  scrape_interval: 5s
+
+scrape_configs:
+  - job_name: api-express
+    static_configs:
+      - targets: ["api-express:4000"]
+
+  - job_name: validator-fastapi
+    static_configs:
+      - targets: ["validator-fastapi:4001"]
+
+  - job_name: orchestrator-spring
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ["orchestrator-spring:4002"]
+
+  - job_name: worker-gofiber
+    static_configs:
+      - targets: ["worker-gofiber:4003"]
+
+  - job_name: api-dotnet
+    static_configs:
+      - targets: ["api-dotnet:4004"]

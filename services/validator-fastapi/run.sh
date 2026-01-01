@@ -3,3 +3,7 @@
 # source .venv/bin/activate
 # pip install -r requirements.txt
 uvicorn app.main:app --host 0.0.0.0 --port 4001 --reload
+
+
+docker build -t validator-fastapi:dev ./services/validator-fastapi
+docker run --rm -p 4001:4001 validator-fastapi:dev
