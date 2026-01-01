@@ -1,0 +1,80 @@
+
+services/api-express/node_modules
+services/validator-fastapi/app/__pycache__
+services/validator-fastapi/.venv
+
+# =========================
+# OS / Editor junk
+# =========================
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# =========================
+# Logs
+# =========================
+*.log
+logs/
+
+# =========================
+# Node / Express
+# =========================
+services/**/node_modules/
+services/**/npm-debug.log
+services/**/yarn-error.log
+
+# =========================
+# Python / FastAPI
+# =========================
+services/**/.venv/
+services/**/venv/
+services/**/*.pyc
+services/**/__pycache__/
+
+# =========================
+# Java / Spring Boot
+# =========================
+services/**/target/
+services/**/.classpath
+services/**/.project
+services/**/.settings/
+
+# =========================
+# Go / Fiber
+# =========================
+services/**/bin/
+services/**/*.exe
+services/**/*.out
+
+# =========================
+# .NET
+# =========================
+services/**/bin/
+services/**/obj/
+
+# =========================
+# Docker
+# =========================
+**/.dockerignore
+docker-compose.override.yml
+
+# =========================
+# Environment / Secrets
+# =========================
+.env
+.env.*
+*.env
+
+# =========================
+# Prometheus / Grafana runtime
+# =========================
+data/
+grafana-data/
+prometheus-data/
+
+# =========================
+# Kubernetes local junk
+# =========================
+.kube/

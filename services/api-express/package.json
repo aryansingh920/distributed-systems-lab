@@ -1,0 +1,13 @@
+{
+  "name": "api-express",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "node src/server.js"
+  },
+  "dependencies": {
+    "express": "^4.22.1",
+    "prom-client": "^15.1.3"
+  }
+}
