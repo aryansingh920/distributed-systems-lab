@@ -7,6 +7,8 @@ require (
 	github.com/prometheus/client_golang v1.20.5
 )
 
+require github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
+
 require (
 	github.com/andybalholm/brotli v1.0.5 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
@@ -20,6 +22,7 @@ require (
 	github.com/prometheus/client_model v0.6.1 // indirect
 	github.com/prometheus/common v0.55.0 // indirect
 	github.com/prometheus/procfs v0.15.1 // indirect
+	github.com/redis/go-redis/v9 v9.17.2
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.51.0 // indirect

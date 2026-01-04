@@ -11,6 +11,7 @@ services:
       - kafka
       - kafka-init
 
+
   validator-fastapi:
     build: ../../services/validator-fastapi
     container_name: validator-fastapi
@@ -23,6 +24,8 @@ services:
       - DB_NAME=orders_db
       - DB_USER=app
       - DB_PASS=app
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
     depends_on:
       - kafka
       - kafka-init
@@ -41,6 +44,11 @@ services:
       - "4003:4003"
     environment:
       - PORT=4003
+      - REDIS_ADDR=redis:6379
+    depends_on:
+      - redis
+
+
 
   api-dotnet:
     build: ../../services/api-dotnet
@@ -91,12 +99,18 @@ services:
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    healthcheck:
+      test: ["CMD-SHELL", "kafka-broker-api-versions --bootstrap-server localhost:9092 >/dev/null 2>&1"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
 
   kafka-init:
     image: confluentinc/cp-kafka:7.6.1
     container_name: kafka-init
     depends_on:
-      - kafka
+      kafka:
+        condition: service_healthy
     entrypoint: ["/bin/sh","-lc"]
     command: >
       echo 'Waiting for Kafka...';
@@ -105,6 +119,11 @@ services:
       echo 'Kafka topic ready';
     restart: "no"
 
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
 
   mysql:
     image: mysql:8.4
@@ -122,8 +141,8 @@ services:
       test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uapp", "-papp"]
       interval: 5s
       timeout: 3s
-      retries: 20
-
-
+      retries: 2
 volumes:
   mysql_data:
+    
+

@@ -17,3 +17,4 @@ docker compose -f infra/docker/docker-compose.yml logs -f --tail=100
 
 
 docker logs -f --tail=200 api-express
+docker logs -f --tail=200 validator-fastapi

@@ -4,8 +4,10 @@ import threading
 from confluent_kafka import Consumer
 from sqlalchemy import text
 from app.db import engine
+from app.cache import cache_last2
 
 KAFKA_BROKER = os.getenv("KAFKA_BROKER", "kafka:9092")
+
 
 
 def persist_event(event: dict):
@@ -37,7 +39,8 @@ def start_consumer():
     c = Consumer({
         "bootstrap.servers": KAFKA_BROKER,
         "group.id": "validator-fastapi",
-        "auto.offset.reset": "earliest"
+        "auto.offset.reset": "earliest",
+        "enable.auto.commit": False
     })
     c.subscribe(["order.created"])
 
@@ -50,8 +53,15 @@ def start_consumer():
             continue
 
         event = json.loads(msg.value().decode("utf-8"))
-        persist_event(event)
-        print("persisted order event:", event.get("order_id"))
+        
+        try:
+            persist_event(event)
+            cache_last2(event)
+            c.commit(message=msg)  # commit AFTER success
+            print("persisted+cached order event:", event.get("order_id"))
+        except Exception as e:
+            print("failed to persist/cache:", e)
+            # no commit -> message will be retrie
 
 
 def run_in_thread():
