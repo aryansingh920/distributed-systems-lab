@@ -18,9 +18,15 @@ services:
       - "4001:4001"
     environment:
       - KAFKA_BROKER=kafka:9092
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_NAME=orders_db
+      - DB_USER=app
+      - DB_PASS=app
     depends_on:
       - kafka
       - kafka-init
+      - mysql
 
   orchestrator-spring:
     build: ../../services/orchestrator-spring
@@ -91,8 +97,33 @@ services:
     container_name: kafka-init
     depends_on:
       - kafka
-    entrypoint: ["/bin/sh", "-c"]
+    entrypoint: ["/bin/sh","-lc"]
     command: >
-      kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists
-      --topic order.created --partitions 1 --replication-factor 1
-      && echo 'Kafka topic ready'
+      echo 'Waiting for Kafka...';
+      until kafka-topics --bootstrap-server kafka:9092 --list >/dev/null 2>&1; do sleep 2; done;
+      kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic order.created --partitions 1 --replication-factor 1;
+      echo 'Kafka topic ready';
+    restart: "no"
+
+
+  mysql:
+    image: mysql:8.4
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: orders_db
+      MYSQL_USER: app
+      MYSQL_PASSWORD: app
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uapp", "-papp"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+
+volumes:
+  mysql_data:
